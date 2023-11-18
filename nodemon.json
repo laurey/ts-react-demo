@@ -1,0 +1,15 @@
+{
+    "verbose": true,
+    "exitcrash": true,
+    "delay": "1500",
+    "watch": ["**/mock/**", ".env*.local", "./config/*"],
+    "ignore": [
+        "src/*",
+        "public/*",
+        "scripts/*",
+        "node_modules/**/node_modules",
+        "*.test.ts*",
+        "*.__test__.ts*",
+        "*.spec.ts*"
+    ]
+}

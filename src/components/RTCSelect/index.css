@@ -1,0 +1,20 @@
+.rtc-select-option {
+    display: inline-block;
+    cursor: pointer;
+    width: 100px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #f09;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.rtc-select-option.selected {
+    color: #eee;
+    border-style: dashed;
+    background-color: cadetblue;
+}
+
+.rtc-select-option + .rtc-select-option {
+    margin-left: 5px;
+}
