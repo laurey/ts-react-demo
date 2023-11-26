@@ -1,20 +1,21 @@
 import React, { memo, forwardRef, useCallback, useState } from 'react';
-import { Input, InputProps } from 'antd';
+import { Input } from 'antd';
+import type { SearchProps } from 'antd/es/input';
 
 const { Search } = Input;
 
-export interface IGlobalSearchProps extends InputProps {
+export interface IGlobalSearchProps {
     forwardedRef?: any;
-    onSearch?: (value: string) => any;
-    onChange?: (value: any) => any;
+    onSearch?: (value: string | undefined) => any;
+    onChange?: (value: string | undefined) => any;
 }
 
-export const GlobalSearch = (props: IGlobalSearchProps) => {
+export const GlobalSearch = (props: IGlobalSearchProps & Omit<SearchProps, 'onChange'>) => {
     const { allowClear, placeholder, forwardedRef, onSearch, onChange } = props;
     const [searchTxt, setSearchTxt] = useState('');
 
     const handleSearchInputChange = useCallback(
-        e => {
+        (e: React.ChangeEvent<HTMLInputElement>) => {
             const { value } = e.target;
             setSearchTxt(value);
             onChange && onChange(value);
@@ -36,13 +37,8 @@ export const GlobalSearch = (props: IGlobalSearchProps) => {
 };
 
 export type Ref = React.Component<any>;
-export type IGlobalSearchInputProps = {
-    placeholder?: string;
-    onSearch?: (value: string) => any;
-    onChange?: (value: any) => any;
-} & InputProps;
 
-export const GlobalSearchInput = forwardRef<Ref, IGlobalSearchInputProps>((props, ref) => {
+export const GlobalSearchInput = forwardRef<Ref, IGlobalSearchProps & Omit<SearchProps, 'onChange'>>((props, ref) => {
     return <GlobalSearch {...props} forwardedRef={ref} />;
 });
 

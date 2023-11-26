@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 
-function NotMatch(props) {
+function NotMatch(props: RouteComponentProps) {
     const { location } = props;
     return (
         <div>

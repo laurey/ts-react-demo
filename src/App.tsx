@@ -49,9 +49,7 @@ export const App = () => {
                             <Route path="/rateControl">
                                 <RateControl />
                             </Route>
-                            <Route path="*">
-                                <NotMatch />
-                            </Route>
+                            <Route path="*" render={props => <NotMatch {...props} />} />
                         </Switch>
                     </div>
                 </Content>

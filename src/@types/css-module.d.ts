@@ -22,3 +22,8 @@ declare module '*.less' {
     const classes: { [exportName: string]: string };
     export default classes;
 }
+
+declare module '*.png' {
+    const value: { [key: string]: string };
+    export default value;
+}

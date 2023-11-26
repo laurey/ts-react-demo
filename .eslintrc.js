@@ -60,7 +60,8 @@ module.exports = {
             {
                 handlers: ['onClick', 'onMouseDown', 'onMouseUp', 'onKeyPress', 'onKeyDown', 'onKeyUp']
             }
-        ]
+        ],
+        'jest/no-focused-tests': 1
     },
     settings: {
         'import/resolver': {

@@ -19,13 +19,14 @@
             ]
         },
         "sourceMap": true,
+        "skipDefaultLibCheck": true,
         "allowJs": true, /* Allow javascript files to be compiled. */
         "checkJs": false, /* Report errors in .js files. */
         "jsx": "react", /* Specify JSX code generation: 'preserve', 'react-native', 'react', 'react-jsx' or 'react-jsxdev'. */
-        "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+        // "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
         /* Strict Type-Checking Options */
         "strict": true, /* Enable all strict type-checking options. */
-        "noImplicitAny": false, /* Raise error on expressions and declarations with an implied 'any' type. */
+        "noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type. */
         "baseUrl": ".", /* Base directory to resolve non-absolute module names. */
         "removeComments": true,
         "resolveJsonModule": true,
@@ -46,9 +47,6 @@
         "dist",
         "build",
         "definitions",
-        "node_modules",
-        "**/*.spec.ts",
-        "**/*.test.ts",
-        "src/app/shared/**/*"
+        "node_modules"
     ]
 }
