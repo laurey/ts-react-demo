@@ -10,7 +10,7 @@ const TerserWebpackPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { rootDir, distDir, srcDir } = require('../paths');
+const { rootDir, appBuild, appSrc, appBui, appSrcld, appHtml, appPath, appTsConfig } = require('../paths');
 
 module.exports = (env, argv) => {
     const mode = 'production';
@@ -20,27 +20,27 @@ module.exports = (env, argv) => {
 
     return {
         mode,
-        context: rootDir,
-        // entry: './src/index',
+        context: appPath,
+        entry: './src/index.tsx',
         devtool: 'source-map',
         output: {
             filename: 'assets/js/[name].[contenthash:8].js',
-            path: distDir,
+            path: appBuild,
             chunkFilename: 'assets/js/[name].[contenthash:8].chunk.js',
             publicPath: '/'
         },
         resolve: {
             alias: {
-                'react-dom': '@hot-loader/react-dom',
-                '@': srcDir
+                // 'react-dom': '@hot-loader/react-dom',
+                '@': appSrc
             },
-            extensions: ['*', '.ts', '.tsx', '.js', '.json', '.css', '.less']
+            extensions: ['.ts', '.tsx', '.js', '.json', '.css', '.less']
         },
         module: {
             rules: [
                 {
                     test: /\.(tsx?)$/,
-                    include: [srcDir],
+                    include: [appSrc],
                     exclude: /(node_modules|bower_components)/,
                     use: [
                         {
@@ -90,17 +90,7 @@ module.exports = (env, argv) => {
                             options: {
                                 sourceMap: true,
                                 importLoaders: 1,
-                                // modules: true
                                 modules: {
-                                    // auto: true,
-                                    // mode: resourcePath => {
-                                    //     if (/node_modules/i.test(resourcePath) || /global.css$/i.test(resourcePath)) {
-                                    //         return 'global';
-                                    //     }
-
-                                    //     return 'local';
-                                    // },
-                                    // exportLocalsConvention: 'camelCase',
                                     localIdentName: '[contenthash:base64:6]'
                                 }
                             }
@@ -149,8 +139,8 @@ module.exports = (env, argv) => {
                 chunkFilename: 'assets/css/[name].[contenthash:8].chunk.css'
             }),
             new HtmlWebpackPlugin({
-                template: path.resolve(rootDir, 'public/index.html'),
-                favicon: path.resolve(rootDir, 'public/favicon.ico'),
+                template: appHtml,
+                favicon: path.resolve(appPath, 'public/favicon.ico'),
                 inject: true
             }),
             // new MonacoWebpackPlugin(),
@@ -164,7 +154,7 @@ module.exports = (env, argv) => {
                 // },
                 async: false,
                 typescript: {
-                    configFile: path.resolve(rootDir, 'tsconfig.json'),
+                    configFile: appTsConfig,
                     diagnosticOptions: {
                         semantic: true,
                         syntactic: true
@@ -181,6 +171,7 @@ module.exports = (env, argv) => {
         ].filter(Boolean),
         optimization: {
             minimize: true,
+            runtimeChunk: 'single',
             minimizer: [
                 new TerserWebpackPlugin({
                     // sourceMap: true,
@@ -230,8 +221,7 @@ module.exports = (env, argv) => {
                     //   enforce: true,
                     // },
                 }
-            },
-            runtimeChunk: 'single'
+            }
         },
         devServer: {
             port,
@@ -242,7 +232,7 @@ module.exports = (env, argv) => {
             host: 'localhost',
             stats: 'minimal',
             historyApiFallback: true,
-            contentBase: distDir
+            contentBase: appBuild
         }
     };
 };
