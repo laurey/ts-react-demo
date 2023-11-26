@@ -82,33 +82,7 @@ function renderWithRouterRedux(
         ...rtlRender(<Router history={history}>{ui}</Router>, { wrapper: Wrapper, ...renderOptions }),
         history
     };
-
-    // const Wrapper = ({ children }) => {
-    //     return (
-    //         <Provider store={store}>
-    //             <Router history={history}>{children}</Router>
-    //         </Provider>
-    //     );
-    // };
-
-    // return {
-    //     store,
-    //     ...rtlRender(ui, { wrapper: props => <Wrapper {...props}>{ui}</Wrapper>, ...renderOptions }),
-    //     history
-    // };
 }
-
-export const localStorageMock = {
-    getItem: jest.fn(),
-    setItem: jest.fn(),
-    removeItem: jest.fn(),
-    clear: jest.fn()
-};
-
-export const mockFetchPromise = (response = {}) =>
-    Promise.resolve({
-        json: () => Promise.resolve(response)
-    });
 
 // re-export everything
 export * from 'history';

@@ -1,6 +1,5 @@
-import { hot } from 'react-hot-loader/root';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { setupStore } from './app/store';
 import App from './App';
@@ -12,15 +11,15 @@ const rootElement: HTMLElement | null = document.getElementById('root');
 
 const store = setupStore();
 
-function render(Component: React.ComponentType): void {
-    ReactDOM.render(
-        <Provider store={store}>
-            <Component />
-        </Provider>,
-        rootElement
+function render(Component) {
+    const root = createRoot(rootElement);
+    root.render(
+        <StrictMode>
+            <Provider store={store}>
+                <Component />
+            </Provider>
+        </StrictMode>
     );
 }
 
-const app = hot(App);
-
-render(app);
+render(App);

@@ -1,22 +1,8 @@
 name: CI
+
 on: [push, pull_request]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-        fail-fast: true
-        matrix:
-          node-version: ['18.x', '20.x']
-    name: Lint code (${{ matrix.node-version }})
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: npm install
-      - run: npm run lint
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -32,3 +18,33 @@ jobs:
           cache: 'npm'
       - run: npm install
       - run: npm run test
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: true
+        matrix:
+          node-version: ['18.x', '20.x']
+    name: Bundle code (${{ matrix.node-version }})
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run build
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+        fail-fast: true
+        matrix:
+          node-version: ['18.x', '20.x']
+    name: Coverage report (${{ matrix.node-version }})
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run coverage

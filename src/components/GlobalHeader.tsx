@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Layout, Menu, MenuTheme } from 'antd';
 
@@ -44,6 +44,7 @@ function GlobalHeader(props: IGlobalHeaderProps) {
             routes.map(route => {
                 return {
                     key: route.path,
+                    // label: route.name,
                     label: <Link to={route.path}>{route.name}</Link>
                 };
             }),
@@ -52,13 +53,8 @@ function GlobalHeader(props: IGlobalHeaderProps) {
 
     return (
         <Header>
-            <Menu
-                theme={theme}
-                items={items}
-                selectedKeys={[pathname]}
-                mode="horizontal"
-                // style={{ lineHeight: '64px' }}
-            />
+            <div className="logo" />
+            <Menu mode="horizontal" theme={theme} items={items} selectedKeys={[pathname]} />
         </Header>
     );
 }

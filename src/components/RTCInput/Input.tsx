@@ -29,8 +29,8 @@ const DebouncedInput = (props: RTCInputIProps) => {
     const { allowClear, placeholder, time = 100, onChange } = props;
     const [value, setValue] = useState<string | number | undefined>('');
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const handleChange = useCallback(debounce(onChange, time), []);
+    const handleChange = debounce(onChange, time);
+
     const handleInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const { value } = e.target;
