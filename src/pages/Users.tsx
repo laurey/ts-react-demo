@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState, memo } from 'react';
-import { Button } from 'antd';
+import { Button, TablePaginationConfig } from 'antd';
 import { MemoizedList } from '../components/List';
 import { GlobalSearchInput } from '../components/SearchInput';
 import { setupFetch, getFetchDataParams } from '../utils';
-import type { IFetchDataParams, IPagination } from './Posts';
 
 const MemoizedGlobalSearchInput = memo(GlobalSearchInput);
 
@@ -12,13 +11,13 @@ const columns = [
         title: '姓名',
         dataIndex: 'name',
         width: '20%',
-        render: text => <span>{text.substring(0, 15)}...</span>
+        render: (text: string | undefined) => <span>{text?.substring(0, 15)}...</span>
     },
     {
         title: '内容',
         dataIndex: 'body',
         width: '20%',
-        render: text => <span>{text ? text.substring(0, 30) : '-'}...</span>
+        render: (text: string | undefined) => <span>{text ? text.substring(0, 30) : '-'}...</span>
     },
     {
         title: 'Email',
@@ -32,19 +31,19 @@ const columns = [
 ];
 
 const Users = () => {
-    const [data, setData] = useState([]);
-    const [pagination, setPagination] = useState<IPagination>({
+    const [data, setData] = useState<Array<any>>([]);
+    const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
         pageSize: 3
     });
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchUserData = (params: IFetchDataParams) => {
+    const fetchUserData = (params: any) => {
         const { pagination: pager } = params;
         setIsLoading(true);
         setupFetch('https://jsonplaceholder.typicode.com/users', null, getFetchDataParams(params)).then(result => {
             setIsLoading(false);
-            setData(result);
+            setData(result?.result);
             setPagination({
                 ...pager,
                 total: result.totalCount || 11
@@ -52,12 +51,12 @@ const Users = () => {
         });
     };
 
-    const handleTableChange = useCallback(pager => {
+    const handleTableChange = useCallback((pager: TablePaginationConfig, filter?: any, sorter?: any, extra?: any) => {
         fetchUserData({ pagination: pager });
     }, []);
 
     const handleRefreshData = useCallback(
-        e => {
+        (e: React.MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             fetchUserData({
                 pagination
@@ -66,11 +65,11 @@ const Users = () => {
         [pagination]
     );
 
-    const handleSearchInputChange = useCallback(val => {
+    const handleSearchInputChange = useCallback((val: string | undefined) => {
         console.log('input.val: ', val);
     }, []);
 
-    const handleSearch = useCallback(value => {
+    const handleSearch = useCallback((value: string | undefined) => {
         fetchUserData({
             pagination,
             ...(value ? { name_like: value } : null)

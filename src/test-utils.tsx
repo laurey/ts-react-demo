@@ -73,9 +73,10 @@ function renderWithRouterRedux(
         ...renderOptions
     } = {}
 ) {
-    function Wrapper({ children }) {
+    function Wrapper({ children }: PropsWithChildren<any>) {
         return <Provider store={store}>{children}</Provider>;
     }
+
     return {
         store,
         ...rtlRender(<Router history={history}>{ui}</Router>, { wrapper: Wrapper, ...renderOptions }),

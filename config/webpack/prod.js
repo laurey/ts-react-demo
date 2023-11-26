@@ -18,8 +18,6 @@ module.exports = (env, argv) => {
     const port = parseInt(process.env.PORT, 10) || 8900;
     const { analyze: isAnalyze } = argv;
 
-    console.log('argv => ', argv);
-
     return {
         mode,
         context: rootDir,
@@ -36,7 +34,7 @@ module.exports = (env, argv) => {
                 'react-dom': '@hot-loader/react-dom',
                 '@': srcDir
             },
-            extensions: ['*', '.js', '.ts', '.tsx', '.json', '.css', '.less']
+            extensions: ['*', '.ts', '.tsx', '.js', '.json', '.css', '.less']
         },
         module: {
             rules: [

@@ -121,6 +121,9 @@ module.exports = (env, argv) => {
                             options: {
                                 sourceMap: true,
                                 importLoaders: 1,
+                                modules: {
+                                    localIdentName: '[contenthash:base64:6]'
+                                }
                             }
                         },
                         {

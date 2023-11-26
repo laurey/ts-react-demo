@@ -1,20 +1,21 @@
 import React, { memo, useRef, useState, forwardRef, useCallback, useImperativeHandle } from 'react';
 import { Input } from 'antd';
-import type { IGlobalSearchInputProps } from './GlobalSearch';
+import { IGlobalSearchProps } from './GlobalSearch';
+import type { SearchProps } from 'antd/es/input';
 
 const { Search } = Input;
 
-const SearchInput = (props, ref) => {
+const SearchInput = (props: IGlobalSearchInputProps, ref: React.Ref<unknown> | undefined) => {
     const { allowClear, placeholder, onSearch, onChange } = props;
     const [searchTxt, setSearchTxt] = useState('');
     const inputSearchRef = useRef(null);
     useImperativeHandle(ref, () => inputSearchRef.current, []);
 
     const handleSearchInputChange = useCallback(
-        e => {
+        (e: React.ChangeEvent<HTMLInputElement>) => {
             const { value } = e.target;
             setSearchTxt(value);
-            onChange(value);
+            onChange && onChange(value);
         },
         [onChange]
     );
@@ -34,6 +35,7 @@ const SearchInput = (props, ref) => {
 
 export type Ref = React.Component<any>;
 
+export type IGlobalSearchInputProps = IGlobalSearchProps & Omit<SearchProps, 'onChange'>;
 export const GlobalSearchInput = forwardRef<Ref, IGlobalSearchInputProps>(SearchInput);
 
 export const MemoizedSearchInput = memo(GlobalSearchInput);

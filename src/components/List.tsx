@@ -1,11 +1,8 @@
 import React, { memo } from 'react';
-import { Table } from 'antd';
+import { Table, TableProps } from 'antd';
 
-export function List(props) {
+export function List(props: TableProps<any>) {
     const { columns, dataSource, pagination, loading, onChange } = props;
-    const handleTableChange = params => {
-        onChange(params);
-    };
 
     return (
         <div>
@@ -15,7 +12,7 @@ export function List(props) {
                 loading={loading}
                 dataSource={dataSource}
                 pagination={pagination}
-                onChange={handleTableChange}
+                onChange={onChange}
             />
         </div>
     );
