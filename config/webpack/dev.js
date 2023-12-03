@@ -7,10 +7,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 // const WorkboxPlugin = require("workbox-webpack-plugin");
 // const TerserWebpackPlugin = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { rootDir, distDir, srcDir } = require('../paths');
+const { appPath, appBuild, appSrc, appTsConfig } = require('../paths');
 
 module.exports = (env, argv) => {
     const mode = 'development';
@@ -19,19 +19,19 @@ module.exports = (env, argv) => {
 
     return {
         mode,
-        context: rootDir,
+        context: appPath,
         devtool: 'inline-source-map',
-        entry: ['react-hot-loader/patch', './src/index.tsx'],
+        // entry: ['./src/index.tsx'],
         output: {
             filename: 'assets/js/[name].bundle.js',
-            path: distDir,
+            path: appBuild,
             chunkFilename: 'assets/js/[name].chunk.js',
             publicPath: '/'
         },
         resolve: {
             alias: {
-                'react-dom': '@hot-loader/react-dom',
-                '@': srcDir
+                // 'react-dom': '@hot-loader/react-dom',
+                '@': appSrc
             },
             extensions: ['*', '.js', '.ts', '.tsx', '.json', '.css', '.less']
         },
@@ -45,7 +45,7 @@ module.exports = (env, argv) => {
             rules: [
                 {
                     test: /\.tsx?$/,
-                    include: [srcDir],
+                    include: [appPath],
                     exclude: /(node_modules|bower_components)/,
                     use: [
                         {
@@ -61,7 +61,7 @@ module.exports = (env, argv) => {
                     test: /\.less$/,
                     exclude: /(node_modules|bower_components)/,
                     use: [
-                        { loader: 'style-loader' },
+                        'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
                                 sourceMap: true,
                                 importLoaders: 1,
                                 modules: {
-                                    // auto: true,
+                                    auto: true,
                                     localIdentName: '[path][name]__[local]--[contenthash:5]'
                                 }
                             }
@@ -120,10 +120,7 @@ module.exports = (env, argv) => {
                             loader: 'css-loader',
                             options: {
                                 sourceMap: true,
-                                importLoaders: 1,
-                                modules: {
-                                    localIdentName: '[contenthash:base64:6]'
-                                }
+                                importLoaders: 1
                             }
                         },
                         {
@@ -166,23 +163,23 @@ module.exports = (env, argv) => {
             // new CleanWebpackPlugin(),
             new webpack.ProgressPlugin(),
             new HtmlWebpackPlugin({
-                template: path.resolve(rootDir, 'public/index.html'),
-                favicon: path.resolve(rootDir, 'public/favicon.ico'),
+                template: path.resolve(appPath, 'public/index.html'),
+                favicon: path.resolve(appPath, 'public/favicon.ico'),
                 inject: true
             }),
+            new webpack.HotModuleReplacementPlugin(),
             // new MonacoWebpackPlugin(),
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': JSON.stringify('development')
             }),
             isAnalyze && new BundleAnalyzerPlugin({ analyzerMode: 'server' }),
-            new webpack.HotModuleReplacementPlugin(),
             new ForkTsCheckerWebpackPlugin({
                 // eslint: {
                 //     files: './src/**/*.{ts,tsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
                 // },
                 async: false,
                 typescript: {
-                    configFile: path.resolve(rootDir, 'tsconfig.json'),
+                    configFile: appTsConfig,
                     diagnosticOptions: {
                         semantic: true,
                         syntactic: true
@@ -199,6 +196,7 @@ module.exports = (env, argv) => {
         ].filter(Boolean),
         devServer: {
             port,
+            hot: true,
             open: true,
             compress: true,
             host: 'localhost',

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-deprecated */
-import React from 'react';
+// import React from 'react';
 // import fetch from 'jest-fetch-mock';
 import {
     renderWithRouter,
@@ -54,9 +54,13 @@ describe('User Component', () => {
             expect(screen.getByText(/loading/i)).toBeInTheDocument();
         });
 
+        await waitFor(() => {
+            expect(spy).toHaveBeenCalledWith('/332211');
+        });
+
         expect(spy).toHaveBeenCalledTimes(1);
-        expect(spy).toHaveBeenCalledWith('/332211');
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+        await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+        // expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
         expect(screen.getByText(/tom/i)).toBeInTheDocument();
     });
 
@@ -84,8 +88,8 @@ describe('User Component', () => {
             fireEvent.click(button);
         });
 
-        expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith('/5566');
+        expect(spy).toHaveBeenCalledTimes(1);
         expect(screen.getByText(/loading/i)).toBeInTheDocument();
 
         await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));

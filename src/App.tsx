@@ -16,7 +16,7 @@ export type AppIProps = {
     appName?: string;
 };
 
-export const App = () => {
+const App: React.FC = () => {
     return (
         <Router>
             <Layout className="layout">

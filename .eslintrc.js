@@ -3,7 +3,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     parserOptions: {
         tsconfigRootDir: __dirname,
-        ecmaVersion: 2020,
+        ecmaVersion: 2022,
         sourceType: 'module',
         ecmaFeatures: {
             jsx: true
@@ -54,6 +54,7 @@ module.exports = {
         'react/require-default-props': 'off',
         'react/no-unused-prop-types': 'off',
         'jsx-a11y/click-events-have-key-events': 'off',
+        'react/react-in-jsx-scope': 0,
         'react/jsx-filename-extension': ['warn', { extensions: ['.js', '.ts', '.tsx'] }],
         'jsx-a11y/no-static-element-interactions': [
             'off',
