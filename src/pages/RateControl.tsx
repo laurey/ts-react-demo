@@ -11,15 +11,18 @@ function RateControl() {
     const [debouncedCounter, setDebouncedCounter] = useState<number>(0);
 
     // Action: code that causes an update to the state when something happens
-    const handleUnDebouncedInputChange = () => {
+    const handleUnDebouncedInputChange = (value: string | undefined) => {
+        console.log('value => ', value);
         setUndebouncedCounter(prev => prev + 1);
     };
 
-    const handleDebouncedInputChange = () => {
+    const handleDebouncedInputChange = (value: string | undefined) => {
+        console.log('value => ', value);
         setDebouncedCounter(prev => prev + 1);
     };
 
-    const handleDebouncedChange = debounce(() => {
+    const handleDebouncedChange = debounce((value: string | undefined) => {
+        console.log('value => ', value);
         setCounter(prev => prev + 1);
     }, 100);
 

@@ -110,7 +110,7 @@ function Posts() {
                     onSearch={handleSearch}
                     onChange={handleSearchInputChange}
                 />
-                <Button htmlType="button" shape="circle" title="Reload" onClick={handleRefreshData}>
+                <Button htmlType="button" title="Reload" onClick={handleRefreshData}>
                     Reload
                 </Button>
             </div>

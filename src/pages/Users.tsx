@@ -94,7 +94,9 @@ const Users = () => {
                     onSearch={handleSearch}
                     onChange={handleSearchInputChange}
                 />
-                <Button htmlType="button" shape="circle" icon="reload" title="Reload" onClick={handleRefreshData} />
+                <Button htmlType="button" title="Reload" onClick={handleRefreshData}>
+                    Reload
+                </Button>
             </div>
             <MemoizedList
                 columns={columns}
