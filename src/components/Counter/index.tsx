@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from 'antd';
 import { decrement, increment, selectCount } from '@/reducers/counter';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import styles from './Counter.less';
+import styles from './Counter.module.less';
 
 function Counter() {
     const value = useAppSelector(selectCount);
@@ -36,7 +36,7 @@ function Counter() {
     return (
         <div>
             <div>
-                <p>
+                <p className={styles.bg}>
                     Counter value: <span>{counter}</span>
                 </p>
                 <Button type="primary" htmlType="button" className={btn} onClick={incrementCounter}>

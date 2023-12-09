@@ -41,5 +41,6 @@ module.exports = {
     publicUrlOrPath: '/',
     jsBundleLocation: 'assets/js',
     cssBundleLocation: 'assets/css',
-    imageBundleLocation: 'assets/images'
+    fontBundleLocation: 'assets/font',
+    imageBundleLocation: 'assets/static'
 };

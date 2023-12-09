@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "ES6",
+        "module": "ESNEXT",
         "target": "ES5", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
         "lib": [
             "ES2015",
@@ -11,6 +11,7 @@
             "ES2020",
             "ES2021",
             "ES2022",
+            "DOM.Iterable",
             "DOM"
         ],
         "paths": {
@@ -18,7 +19,7 @@
                 "src/*"
             ]
         },
-        "skipDefaultLibCheck": true,
+        // "skipDefaultLibCheck": true,
         "allowJs": true, /* Allow javascript files to be compiled. */
         "jsx": "react-jsx", /* Specify JSX code generation: 'preserve', 'react-native', 'react', 'react-jsx' or 'react-jsxdev'. */
         // "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
@@ -39,8 +40,8 @@
     "exclude": [
         "dist",
         "build",
-        "definitions",
+        "config",
+        "__tests__",
         "node_modules",
-        "src/service-worker.ts"
     ]
 }

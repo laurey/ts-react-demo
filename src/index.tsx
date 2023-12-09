@@ -4,14 +4,14 @@ import { Provider } from 'react-redux';
 import { setupStore } from './app/store';
 import App from './App';
 
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.less';
 import './index.css';
 
 const rootElement: HTMLElement | null = document.getElementById('root');
 
 const store = setupStore();
 
-function render(Component) {
+function render(Component: React.ComponentType) {
     const root = createRoot(rootElement);
     root.render(
         <StrictMode>

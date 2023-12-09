@@ -1,6 +1,22 @@
+'use strict';
+
+// Do this as the first thing so that any code reading it knows the right env.
+process.env.BABEL_ENV = 'development';
+process.env.NODE_ENV = 'development';
+
+// Makes the script crash on unhandled rejections instead of silently
+// ignoring them. In the future, promise rejections that are not handled will
+// terminate the Node.js process with a non-zero exit code.
+process.on('unhandledRejection', err => {
+    throw err;
+});
+
+require('../env');
+
 const path = require('path');
 const webpack = require('webpack');
 
+const TSImportPluginFactory = require('ts-import-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,30 +26,40 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const { appPath, appBuild, appSrc, appTsConfig } = require('../paths');
+const getClientEnvironment = require('../env');
+const { appPath, appBuild, appSrc, appTsConfig, publicUrlOrPath, appHtml, excludeModules } = require('../paths');
+const { cssModuleRegex, cssRegex, antdCssRegex } = require('./cssLoaders');
 
-module.exports = (env, argv) => {
+module.exports = (webpackEnv, argv) => {
     const mode = 'development';
     const port = parseInt(process.env.PORT, 10) || 8900;
     const { analyze: isAnalyze } = argv;
+
+    const env = getClientEnvironment(publicUrlOrPath.slice(0, -1));
 
     return {
         mode,
         context: appPath,
         devtool: 'inline-source-map',
-        // entry: ['./src/index.tsx'],
+        entry: ['./src/index.tsx'],
         output: {
             filename: 'assets/js/[name].bundle.js',
             path: appBuild,
             chunkFilename: 'assets/js/[name].chunk.js',
-            publicPath: '/'
+            publicPath: publicUrlOrPath
         },
         resolve: {
             alias: {
                 // 'react-dom': '@hot-loader/react-dom',
                 '@': appSrc
             },
-            extensions: ['*', '.js', '.ts', '.tsx', '.json', '.css', '.less']
+            modules: ['node_modules', 'src'],
+            extensions: ['.ts', '.tsx', '.js', '.json', '.css', '.less'],
+            extensionAlias: {
+                '.js': ['.js', '.ts'],
+                '.cjs': ['.cjs', '.cts'],
+                '.mjs': ['.mjs', '.mts']
+            }
         },
         watchOptions: {
             // for some systems, watching many files can result in a lot of CPU or memory usage
@@ -44,35 +70,46 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.tsx?$/,
-                    include: [appPath],
-                    exclude: /(node_modules|bower_components)/,
+                    test: /\.([cm]?ts|tsx)$/,
+                    include: [appSrc],
+                    // exclude: /(node_modules|bower_components)/,
                     use: [
                         {
                             loader: 'ts-loader',
                             options: {
                                 // disable type checker - we will use it in fork plugin
-                                transpileOnly: true
+                                transpileOnly: true,
+                                getCustomTransformers: () => ({
+                                    before: [
+                                        TSImportPluginFactory({
+                                            libraryName: 'antd',
+                                            libraryDirectory: 'es',
+                                            style: true
+                                        })
+                                    ]
+                                })
                             }
                         }
                     ]
                 },
                 {
-                    test: /\.less$/,
-                    exclude: /(node_modules|bower_components)/,
+                    test: cssRegex,
+                    exclude: [cssModuleRegex, antdCssRegex],
                     use: [
                         'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
                                 sourceMap: true,
-                                importLoaders: 1,
+                                importLoaders: 2,
                                 modules: {
-                                    // auto: true,
-                                    mode: 'global',
+                                    auto: false,
                                     localIdentName: '[path][name]__[local]--[contenthash:5]'
                                 }
                             }
+                        },
+                        {
+                            loader: 'postcss-loader'
                         },
                         {
                             loader: 'less-loader',
@@ -87,17 +124,15 @@ module.exports = (env, argv) => {
                     ]
                 },
                 {
-                    test: /\.css$/i,
-                    exclude: /(node_modules|bower_components)/,
+                    test: cssModuleRegex,
+                    include: [appSrc],
                     use: [
-                        {
-                            loader: 'style-loader'
-                        },
+                        'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
                                 sourceMap: true,
-                                importLoaders: 1,
+                                importLoaders: 2,
                                 modules: {
                                     auto: true,
                                     localIdentName: '[path][name]__[local]--[contenthash:5]'
@@ -106,52 +141,77 @@ module.exports = (env, argv) => {
                         },
                         {
                             loader: 'postcss-loader'
+                        },
+                        {
+                            loader: 'less-loader',
+                            options: {
+                                lessOptions: {
+                                    sourceMap: true,
+                                    strictMath: true,
+                                    javascriptEnabled: true
+                                }
+                            }
                         }
                     ]
                 },
                 {
-                    test: /\.css$/i,
-                    include: /(node_modules|bower_components)/,
+                    test: antdCssRegex,
+                    include: excludeModules,
                     use: [
-                        {
-                            loader: 'style-loader'
-                        },
+                        'style-loader',
                         {
                             loader: 'css-loader',
                             options: {
                                 sourceMap: true,
-                                importLoaders: 1
+                                importLoaders: 2,
+                                modules: {
+                                    auto: false,
+                                    localIdentName: '[path][name]__[local]--[contenthash:5]'
+                                }
                             }
                         },
                         {
                             loader: 'postcss-loader'
-                        }
-                    ]
-                },
-                {
-                    test: /\.(eot|ttf|otf|woff|woff2)$/,
-                    use: [
+                        },
                         {
-                            loader: 'file-loader',
+                            loader: 'less-loader',
                             options: {
-                                name: 'assets/static/[name].[contenthash:8].[ext]'
+                                lessOptions: {
+                                    sourceMap: true,
+                                    strictMath: false,
+                                    javascriptEnabled: true
+                                }
                             }
                         }
                     ]
                 },
                 {
+                    test: /\.(woff(2)?|ttf|eot|otf)$/,
+                    type: 'asset/resource'
+                },
+                {
                     test: /\.(png|jpg|gif|jpeg)$/i,
-                    use: {
-                        loader: 'url-loader',
-                        options: {
-                            limit: 10000,
-                            name: 'assets/static/[name].[contenthash:8].[ext]'
-                        }
-                    }
+                    type: 'asset'
+                },
+                {
+                    test: /\.svg$/i,
+                    type: 'asset',
+                    resourceQuery: /url/ // *.svg?url
                 },
                 {
                     test: /\.svg$/,
-                    use: ['@svgr/webpack']
+                    issuer: /\.tsx?$/,
+                    resourceQuery: { not: [/url/] },
+                    use: [
+                        'babel-loader',
+                        '@svgr/webpack',
+                        {
+                            loader: 'url-loader',
+                            options: {
+                                limit: 10240
+                            }
+                        }
+                    ]
                 },
                 {
                     test: /\.worker\.js$/,
@@ -163,21 +223,19 @@ module.exports = (env, argv) => {
             // new CleanWebpackPlugin(),
             new webpack.ProgressPlugin(),
             new HtmlWebpackPlugin({
-                template: path.resolve(appPath, 'public/index.html'),
+                template: appHtml,
                 favicon: path.resolve(appPath, 'public/favicon.ico'),
                 inject: true
             }),
-            new webpack.HotModuleReplacementPlugin(),
+            // new webpack.HotModuleReplacementPlugin(),
             // new MonacoWebpackPlugin(),
-            new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify('development')
-            }),
+            // new webpack.DefinePlugin({
+            //     'process.env.NODE_ENV': JSON.stringify('development')
+            // }),
+            new webpack.DefinePlugin(env.stringified),
             isAnalyze && new BundleAnalyzerPlugin({ analyzerMode: 'server' }),
             new ForkTsCheckerWebpackPlugin({
-                // eslint: {
-                //     files: './src/**/*.{ts,tsx}' // required - same as command `eslint ./src/**/*.{ts,tsx,js,jsx} --ext .ts,.tsx,.js,.jsx`
-                // },
-                async: false,
+                async: true,
                 typescript: {
                     configFile: appTsConfig,
                     diagnosticOptions: {

@@ -3,8 +3,14 @@
 }
 
 .App-logo {
-    height: 40vmin;
+    color: rgb(8 126 164);
+    height: 20vmin;
     pointer-events: none;
+}
+
+.bg {
+    height: 30vmin;
+    background: no-repeat url(~assets/bugatti.jpg);
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -7,13 +7,19 @@ import Topics from './pages/Topics';
 import Counter from './pages/Counter';
 import Posts from './pages/Posts';
 import Users from './pages/Users';
+import { ReactComponent as Star } from './assets/react.svg';
 import RateControl from './pages/RateControl';
 import NotMatch from './components/NoMatch';
+import './App.css';
 
 const { Content, Footer } = Layout;
 
 export type AppIProps = {
     appName?: string;
+};
+
+const logoStyle: React.CSSProperties = {
+    width: '200px'
 };
 
 const App: React.FC = () => {
@@ -30,6 +36,12 @@ const App: React.FC = () => {
                             minHeight: `calc(100vh - 8rem)`
                         }}
                     >
+                        <section className="App">
+                            <Star className="App-logo" style={logoStyle} />
+                        </section>
+                        <section>
+                            <div className="bg">div element with background</div>
+                        </section>
                         <Switch>
                             <Route exact path="/">
                                 <Home />

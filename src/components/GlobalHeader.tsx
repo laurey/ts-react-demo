@@ -44,7 +44,7 @@ function GlobalHeader(props: IGlobalHeaderProps) {
             routes.map(route => {
                 return {
                     key: route.path,
-                    // label: route.name,
+                    // label: route.name
                     label: <Link to={route.path}>{route.name}</Link>
                 };
             }),
