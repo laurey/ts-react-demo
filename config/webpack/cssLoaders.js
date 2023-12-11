@@ -27,7 +27,7 @@ const lessLoaders = [
     }
 ];
 
-const antdCssRegex = /\/node_modules\/antd\/\w+.+\.(css|less)?$/;
+const antdCssRegex = /antd\/\w+.+\.(css|less)?$/;
 const cssModuleRegex = /\.module\.(css|less)$/;
 const cssRegex = /\.(css|less)$/;
 

@@ -8,7 +8,7 @@ module.exports = api => {
             ['@babel/preset-env', { targets: { node: 'current' } }],
             '@babel/preset-react',
             '@babel/preset-typescript'
-        ]
-        // plugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }]]
+        ],
+        plugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: true }]]
     };
 };

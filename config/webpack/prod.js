@@ -16,10 +16,10 @@ process.on('unhandledRejection', err => {
 const path = require('path');
 const webpack = require('webpack');
 
-const TSImportPluginFactory = require('ts-import-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const TSImportPluginFactory = require('ts-import-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 // const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 // const WorkboxPlugin = require("workbox-webpack-plugin");
 const TerserWebpackPlugin = require('terser-webpack-plugin');
@@ -34,7 +34,6 @@ const {
     appTsConfig,
     publicUrlOrPath,
     appHtml,
-    excludeModules,
     imageBundleLocation,
     fontBundleLocation,
     jsBundleLocation,
@@ -73,23 +72,26 @@ module.exports = (webpackEnv, argv) => {
             rules: [
                 {
                     test: /\.([cm]?ts|tsx)$/,
-                    // include: [appSrc],
-                    exclude: /(node_modules|bower_components)/,
+                    include: [appSrc],
+                    // exclude: /(node_modules|bower_components)/,
                     use: [
+                        {
+                            loader: 'babel-loader'
+                        },
                         {
                             loader: 'ts-loader',
                             options: {
                                 // disable type checker - we will use it in fork plugin
-                                transpileOnly: true,
-                                getCustomTransformers: () => ({
-                                    before: [
-                                        TSImportPluginFactory({
-                                            libraryName: 'antd',
-                                            libraryDirectory: 'es',
-                                            style: true
-                                        })
-                                    ]
-                                })
+                                transpileOnly: true
+                                // getCustomTransformers: () => ({
+                                //     before: [
+                                //         TSImportPluginFactory({
+                                //             libraryName: 'antd',
+                                //             libraryDirectory: 'es',
+                                //             style: true
+                                //         })
+                                //     ]
+                                // })
                             }
                         }
                     ]
@@ -158,7 +160,7 @@ module.exports = (webpackEnv, argv) => {
                 },
                 {
                     test: antdCssRegex,
-                    include: excludeModules,
+                    // include: excludeModules,
                     use: [
                         { loader: MiniCssExtractPlugin.loader },
                         {
@@ -208,7 +210,7 @@ module.exports = (webpackEnv, argv) => {
                 },
                 {
                     test: /\.svg$/,
-                    issuer: /\.tsx?$/,
+                    issuer: /\.(j|t)sx?$/,
                     resourceQuery: { not: [/url/] },
                     use: [
                         'babel-loader',
@@ -243,6 +245,10 @@ module.exports = (webpackEnv, argv) => {
             // new webpack.DefinePlugin({
             //     'process.env.NODE_ENV': JSON.stringify('production')
             // }),
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }),
             new webpack.DefinePlugin(env.stringified),
             isAnalyze && new BundleAnalyzerPlugin({ analyzerMode: 'server' }),
             new ForkTsCheckerWebpackPlugin({
