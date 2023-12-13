@@ -84,7 +84,6 @@ const Users = () => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.count('users-render');
 
     return (
         <div style={{ padding: 12 }}>
