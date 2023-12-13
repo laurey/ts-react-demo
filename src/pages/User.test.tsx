@@ -59,8 +59,8 @@ describe('User Component', () => {
         });
 
         expect(spy).toHaveBeenCalledTimes(1);
-        await waitForElementToBeRemoved(screen.queryByText(/loading/i));
-        // expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+        // await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
         expect(screen.getByText(/tom/i)).toBeInTheDocument();
     });
 

@@ -8,7 +8,6 @@ export default function User(props: UserProps): JSX.Element {
     const [user, setUser] = useState<Record<string, string | number> | null>(null);
 
     const fetchUserData = useCallback(async (id: string | number | null | undefined) => {
-        // console.log('id => ', id);
         if (!id) {
             return;
         }
@@ -16,7 +15,6 @@ export default function User(props: UserProps): JSX.Element {
         setLoading(true);
         const response = await fetch('/' + id);
         const user = await response.json();
-        // console.log('user => ', user);
         setUser(user);
         setLoading(false);
     }, []);
